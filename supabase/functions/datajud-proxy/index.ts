@@ -144,6 +144,9 @@ Deno.serve(async (req: Request) => {
 
     const { url, body, method = 'POST' }: ProxyRequest = requestData;
 
+    // Extrair headers se fornecidos pelo cliente
+    const { headers: clientHeaders } = requestData;
+
     // Log da requisição (com URL sanitizada)
     console.info('DataJud Proxy Request:', {
       url: sanitizeUrl(url),
@@ -155,15 +158,21 @@ Deno.serve(async (req: Request) => {
     });
 
     // Construir headers da requisição para a API DataJud
-    // IMPORTANTE: A API Key é definida aqui, não vem do cliente
     const requestHeaders: Record<string, string> = {
-      'Authorization': `APIKey ${DATAJUD_CONFIG.API_KEY}`,
       'Content-Type': 'application/json',
       'User-Agent': DATAJUD_CONFIG.USER_AGENT,
       'Accept': 'application/json',
       'Accept-Encoding': 'gzip, deflate',
       'Cache-Control': 'no-cache',
     };
+
+    // Adicionar Authorization header se fornecido pelo cliente
+    if (clientHeaders?.Authorization) {
+      requestHeaders['Authorization'] = clientHeaders.Authorization;
+    } else {
+      // Fallback para a API key hardcoded se não fornecida
+      requestHeaders['Authorization'] = `APIKey ${DATAJUD_CONFIG.API_KEY}`;
+    }
 
     // Fazer a requisição para a API DataJud
     const controller = new AbortController();
