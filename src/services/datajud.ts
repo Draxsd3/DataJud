@@ -25,7 +25,7 @@ class DataJudService {
   private async makeRequest(tribunal: string, query: SearchQuery): Promise<SearchResponse> {
     const url = `${DATAJUD_CONFIG.BASE_URL}/${tribunal}/_search`;
     
-    const response = await fetch('/api/datajud-proxy', {
+   const response = await fetch("https://nwwtfxtvfskolndfnbko.supabase.co/functions/v1/datajud-proxy", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
