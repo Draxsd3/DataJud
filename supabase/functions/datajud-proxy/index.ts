@@ -33,7 +33,9 @@ Deno.serve(async (req: Request) => {
 
     // Garantir que a API Key está sendo usada corretamente
     const requestHeaders = {
-      ...headers,
+      // Remova o spread ...headers daqui para evitar que headers do cliente sobrescrevam
+      // ou para evitar que headers indesejados sejam passados.
+      // Se houver outros headers que você queira passar do cliente, adicione-os explicitamente.
       'Authorization': `APIKey ${DATAJUD_API_KEY}`,
       'Content-Type': 'application/json',
       'User-Agent': 'DataJud-Securitizadora-Proxy/1.0',
